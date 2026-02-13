@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Valentine 🧸❤️</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ff5f9e,#ff99c8);
+overflow:hidden;
+position:relative;
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+color:white;
+opacity:.7;
+animation:float 6s linear infinite;
+}
+@keyframes float{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh);opacity:0}
+}
+
+/* Card */
+.card{
+background:white;
+padding:40px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 20px 40px rgba(0,0,0,0.25);
+width:420px;
+position:relative;
+}
+
+.teddy{
+font-size:70px;
+animation:bounce 2s infinite;
+}
+@keyframes bounce{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+}
+
+h1{color:#ff2e63;margin:15px 0}
+p{margin-bottom:25px;color:#555}
+
+.buttons{
+position:relative;
+height:80px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+font-size:16px;
+cursor:pointer;
+position:absolute;
+transition:0.2s ease;
+}
+
+.yes{
+background:#ff2e63;
+color:white;
+left:40px;
+}
+.yes:hover{transform:scale(1.1)}
+
+.no{
+background:#eee;
+color:#333;
+right:40px;
+}
+
+/* ===== CINEMATIC TAKEOVER ===== */
+
+.crazy{
+position:fixed;
+inset:0;
+background-image:url('bg.jpeg');
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:999;
+overflow:hidden;
+animation:zoomBg 8s infinite alternate;
+}
+
+.crazy::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.55);
+backdrop-filter:blur(4px);
+}
+
+/* Background zoom */
+@keyframes zoomBg{
+from{background-size:100%}
+to{background-size:110%}
+}
+
+/* Glowing text */
+.big-text{
+font-size:80px;
+font-weight:bold;
+color:white;
+text-align:center;
+z-index:2;
+text-shadow:
+0 0 10px #fff,
+0 0 20px #ff00cc,
+0 0 40px #ff00cc,
+0 0 80px #ff00cc;
+animation:pulse 1.2s infinite alternate;
+}
+
+@keyframes pulse{
+from{transform:scale(1)}
+to{transform:scale(1.1)}
+}
+
+/* Fireworks */
+.particle{
+position:absolute;
+width:8px;
+height:8px;
+border-radius:50%;
+animation:explode 1.5s ease-out forwards;
+}
+
+@keyframes explode{
+to{
+transform:translate(var(--x),var(--y));
+opacity:0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+<div class="teddy">🧸</div>
+<h1>One Important Question ❤️</h1>
+<p>Will you be my Valentine?</p>
+
+<div class="buttons" id="buttonArea">
+<button class="yes" onclick="goCrazy()">Yes 💖</button>
+<button class="no" id="noBtn">No 🙈</button>
+</div>
+</div>
+
+<script>
+
+/* Floating hearts */
+setInterval(()=>{
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(Math.random()*20+15)+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),6000);
+},400);
+
+/* ===== Impossible NO Button ===== */
+const noBtn=document.getElementById("noBtn");
+const area=document.getElementById("buttonArea");
+
+area.addEventListener("mousemove",(e)=>{
+const rect=noBtn.getBoundingClientRect();
+const dx=e.clientX-(rect.left+rect.width/2);
+const dy=e.clientY-(rect.top+rect.height/2);
+const distance=Math.sqrt(dx*dx+dy*dy);
+
+if(distance<120){
+const angle=Math.atan2(dy,dx);
+const moveX=-Math.cos(angle)*120;
+const moveY=-Math.sin(angle)*120;
+
+let newLeft=noBtn.offsetLeft+moveX;
+let newTop=noBtn.offsetTop+moveY;
+
+const maxX=area.clientWidth-noBtn.offsetWidth;
+const maxY=area.clientHeight-noBtn.offsetHeight;
+
+newLeft=Math.max(0,Math.min(maxX,newLeft));
+newTop=Math.max(0,Math.min(maxY,newTop));
+
+noBtn.style.left=newLeft+"px";
+noBtn.style.top=newTop+"px";
+}
+});
+
+/* ===== CINEMATIC YES ===== */
+
+function goCrazy(){
+
+document.getElementById("card").style.display="none";
+
+const crazy=document.createElement("div");
+crazy.className="crazy";
+document.body.appendChild(crazy);
+
+const text=document.createElement("div");
+text.className="big-text";
+text.innerHTML="IT’S A DATE 💘🔥";
+crazy.appendChild(text);
+
+/* massive fireworks */
+for(let i=0;i<500;i++){
+let p=document.createElement("div");
+p.className="particle";
+p.style.backgroundColor=`hsl(${Math.random()*360},100%,60%)`;
+p.style.left="50%";
+p.style.top="50%";
+p.style.setProperty('--x',(Math.random()*1000-500)+"px");
+p.style.setProperty('--y',(Math.random()*800-400)+"px");
+crazy.appendChild(p);
+setTimeout(()=>p.remove(),1500);
+}
+
+}
+
+</script>
+
+</body>
+</html>
